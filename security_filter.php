@@ -28,11 +28,15 @@ function global_filter()
 	//处理跨域POST提交问题
 	if($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
-		$url = parse_url($_SERVER['HTTP_REFERER']);
-		$referer_host = !empty($url['port']) && $url['port'] != '80' ? $url['host'].':'.$url['port'] : $url['host'];
-		if ($referer_host != $_SERVER['HTTP_HOST'])
+		//处理客户端POST请求处理没有HTTP_REFERER参数问题
+		if(isset($_SERVER['HTTP_REFERER']))
 		{
-           header_status_404();
+			$url = parse_url($_SERVER['HTTP_REFERER']);
+			$referer_host = !empty($url['port']) && $url['port'] != '80' ? $url['host'].':'.$url['port'] : $url['host'];
+			if($referer_host != $_SERVER['HTTP_HOST'])
+			{
+			   header_status_404();
+			}
 		}
 	}
 	
